@@ -22,7 +22,7 @@ const Navbar = () => {
                     <div className="flex items-center">
                         <Link to="/" className="flex-shrink-0 flex items-center">
                             <span className="text-2xl font-bold bg-gradient-to-r from-primary-600 to-purple-600 bg-clip-text text-transparent">
-                                NotesShare
+                                NotesHive
                             </span>
                         </Link>
                     </div>
