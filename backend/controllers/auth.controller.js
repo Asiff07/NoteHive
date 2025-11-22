@@ -47,7 +47,6 @@ exports.register = async (req, res) => {
                 path: '/',
                 maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
             };
-            console.log('Register Controller - Setting Cookie:', 'token', token.substring(0, 10) + '...', cookieOptions);
             res.cookie('token', token, cookieOptions);
 
             res.status(201).json({
@@ -92,7 +91,6 @@ exports.login = async (req, res) => {
             path: '/',
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
         };
-        console.log('Login Controller - Setting Cookie:', 'token', token.substring(0, 10) + '...', cookieOptions);
         res.cookie('token', token, cookieOptions);
 
         res.json({
