@@ -36,12 +36,25 @@ exports.register = async (req, res) => {
         });
 
         if (user) {
+            // 5. Generate token
+            const token = generateToken(user._id);
+
+            // 6. Set cookie (same settings as login)
+            const cookieOptions = {
+                httpOnly: true,
+                secure: false, // Keep false for dev
+                sameSite: 'lax',
+                path: '/',
+                maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+            };
+            console.log('Register Controller - Setting Cookie:', 'token', token.substring(0, 10) + '...', cookieOptions);
+            res.cookie('token', token, cookieOptions);
+
             res.status(201).json({
                 _id: user.id,
                 name: user.name,
                 email: user.email,
                 role: user.role,
-                message: 'Registration successful. Please login.'
             });
         } else {
             res.status(400).json({ message: 'Invalid user data' });
@@ -72,12 +85,15 @@ exports.login = async (req, res) => {
         const token = generateToken(user._id);
 
         // 4. Set cookie
-        res.cookie('token', token, {
+        const cookieOptions = {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'lax', // or 'strict'
+            secure: false, // Keep false for dev
+            sameSite: 'lax',
+            path: '/',
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-        });
+        };
+        console.log('Login Controller - Setting Cookie:', 'token', token.substring(0, 10) + '...', cookieOptions);
+        res.cookie('token', token, cookieOptions);
 
         res.json({
             _id: user.id,

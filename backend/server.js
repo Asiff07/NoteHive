@@ -26,6 +26,17 @@ app.use(cors({
 }));
 app.use(cookieParser());
 
+const fs = require('fs');
+const path = require('path');
+
+// GLOBAL DEBUG LOGGING
+app.use((req, res, next) => {
+    const logMessage = `[${new Date().toISOString()}] ${req.method} ${req.url}\nCookies: ${JSON.stringify(req.cookies)}\nHeaders: ${JSON.stringify(req.headers)}\n\n`;
+    fs.appendFileSync(path.join(__dirname, 'backend_debug.log'), logMessage);
+    console.log(logMessage);
+    next();
+});
+
 // Rate Limiting (increased for development)
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes

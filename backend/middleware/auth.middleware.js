@@ -4,11 +4,16 @@ const User = require('../models/User');
 exports.protect = async (req, res, next) => {
     let token;
 
+    // DEBUG LOGGING
+    console.log('Auth Middleware - Cookies:', req.cookies);
+    console.log('Auth Middleware - Headers:', req.headers);
+
     if (req.cookies.token) {
         token = req.cookies.token;
     }
 
     if (!token) {
+        console.log('Auth Middleware - No token found');
         return res.status(401).json({ message: 'Not authorized, no token' });
     }
 

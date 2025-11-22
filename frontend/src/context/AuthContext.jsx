@@ -30,9 +30,16 @@ export const AuthProvider = ({ children }) => {
     };
 
     const login = async (email, password) => {
-        const res = await axios.post('/auth/login', { email, password });
-        setUser(res.data);
-        return res.data;
+        console.log('AuthContext: login called with', email);
+        try {
+            const res = await axios.post('/auth/login', { email, password });
+            console.log('AuthContext: login success', res.data);
+            setUser(res.data);
+            return res.data;
+        } catch (error) {
+            console.error('AuthContext: login failed', error);
+            throw error;
+        }
     };
 
     const signup = async (name, email, password) => {

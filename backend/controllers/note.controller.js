@@ -17,6 +17,16 @@ exports.createNote = async (req, res) => {
         const { subject, textContent, type, price, taughtDate } = req.body;
         const files = req.files;
 
+        // Validate price
+        let validatedPrice = parseFloat(price) || 0;
+        if (validatedPrice < 0) {
+            return res.status(400).json({ message: 'Price cannot be negative' });
+        }
+        // If price is 0, it's free
+        if (validatedPrice === 0 || type === 'official') {
+            validatedPrice = 0;
+        }
+
         let imageUrls = [];
         let fileUrls = [];
 
@@ -46,7 +56,7 @@ exports.createNote = async (req, res) => {
             files: fileUrls,
             owner: req.user.id,
             type: type || 'market',
-            price: type === 'official' ? 0 : price,
+            price: validatedPrice,
             status: 'published'
         });
 
