@@ -92,7 +92,7 @@ exports.createStripeCheckout = async (req, res) => {
                 },
             ],
             mode: 'payment',
-            success_url: `${process.env.FRONTEND_URL}/?payment=success`,
+            success_url: `${process.env.FRONTEND_URL}/?payment=success&session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${process.env.FRONTEND_URL}/?payment=cancelled`,
             metadata: {
                 noteId: note._id.toString(),
@@ -102,6 +102,38 @@ exports.createStripeCheckout = async (req, res) => {
         });
 
         res.json({ url: session.url });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+// Verify Stripe Checkout Session
+exports.verifyStripeCheckout = async (req, res) => {
+    try {
+        const { sessionId } = req.body;
+
+        // Retrieve the session from Stripe
+        const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+        if (session.payment_status === 'paid') {
+            const { noteId, buyerId, sellerId } = session.metadata;
+
+            // Process the successful payment
+            await handleSuccessfulPayment({
+                noteId,
+                buyerId,
+                sellerId,
+                amount: session.amount_total / 100,
+                provider: 'stripe',
+                providerPaymentId: session.payment_intent,
+                metadata: session
+            });
+
+            res.json({ success: true, message: 'Payment verified successfully' });
+        } else {
+            res.status(400).json({ success: false, message: 'Payment not completed' });
+        }
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error' });

@@ -5,6 +5,7 @@ import Navbar from '../components/Navbar';
 import GlassCard from '../components/GlassCard';
 import { Download, Calendar, User, FileText, ChevronLeft, ChevronRight, Lock } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import ReviewSection from '../components/ReviewSection';
 
 const NoteDetail = () => {
     const { id } = useParams();
@@ -245,6 +246,11 @@ const NoteDetail = () => {
                                 )}
                             </GlassCard>
                         )}
+
+                        {/* Reviews Section */}
+                        <div className="mt-8">
+                            <ReviewSection noteId={id} />
+                        </div>
                     </div>
 
                     {/* Sidebar */}

@@ -12,6 +12,9 @@ const noteRoutes = require('./routes/note.routes');
 const adminRoutes = require('./routes/admin.routes');
 const paymentRoutes = require('./routes/payment.routes');
 const chatRoutes = require('./routes/chat.routes');
+const reviewRoutes = require('./routes/review.routes');
+const wishlistRoutes = require('./routes/wishlist.routes');
+const dashboardRoutes = require('./routes/dashboard.routes');
 
 const app = express();
 
@@ -23,10 +26,10 @@ app.use(cors({
 }));
 app.use(cookieParser());
 
-// Rate Limiting
+// Rate Limiting (increased for development)
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100 // limit each IP to 100 requests per windowMs
+    max: 1000 // limit each IP to 1000 requests per windowMs (increased from 100)
 });
 app.use(limiter);
 
@@ -63,9 +66,12 @@ mongoose.connect(process.env.MONGODB_URI)
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/notes', noteRoutes);
+app.use('/api/notes', reviewRoutes); // Review routes are nested under notes
 app.use('/api/admin', adminRoutes);
 app.use('/api/payments', paymentRoutes); // The rest of payment routes
 app.use('/api/chat', chatRoutes);
+app.use('/api/wishlist', wishlistRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 // Error Handler
 app.use((err, req, res, next) => {

@@ -1,83 +1,188 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate, Link } from 'react-router-dom';
 import GlassCard from '../components/GlassCard';
+import { UserPlus, Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
 
 const Signup = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
     const { signup } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError('');
+
+        // Validation
+        if (password !== confirmPassword) {
+            setError('Passwords do not match');
+            return;
+        }
+
+        if (password.length < 6) {
+            setError('Password must be at least 6 characters');
+            return;
+        }
+
+        setLoading(true);
+        console.log('Attempting signup with:', { name, email });
+
         try {
             await signup(name, email, password);
-            navigate('/login'); // Redirect to login after signup
+            navigate('/');
         } catch (err) {
-            setError(err.response?.data?.message || 'Failed to signup');
+            console.error('Signup error:', err);
+            console.error('Error response:', err.response);
+            const errorMessage = err.response?.data?.message || err.message || 'Failed to signup';
+            setError(errorMessage);
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50 dark:bg-[#0c0c0c] transition-colors">
-            <GlassCard className="w-full max-w-md">
-                <h2 className="text-3xl font-bold text-center mb-6 bg-gradient-to-r from-primary-600 to-purple-600 bg-clip-text text-transparent">
-                    Join NotesShare
-                </h2>
-                {error && (
-                    <div className="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 p-3 rounded-lg mb-4 text-sm border border-red-200 dark:border-red-800">
-                        {error}
+        <div className="min-h-screen flex items-center justify-center px-4 py-12">
+            <div className="w-full max-w-md">
+                {/* Logo/Title */}
+                <div className="text-center mb-8 animate-slide-up">
+                    <h1 className="text-5xl font-bold text-gradient mb-2">NotesHive</h1>
+                    <p className="text-gray-600 dark:text-gray-400">Create your account and start sharing notes!</p>
+                </div>
+
+                {/* Signup Form */}
+                <GlassCard premium className="animate-scale-in">
+                    <div className="flex items-center gap-3 mb-6">
+                        <div className="p-3 bg-gradient-primary rounded-xl">
+                            <UserPlus className="text-white" size={24} />
+                        </div>
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Sign Up</h2>
                     </div>
-                )}
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Full Name</label>
-                        <input
-                            type="text"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            className="glass-input w-full bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white border-gray-200 dark:border-gray-700"
-                            placeholder="John Doe"
-                            required
-                        />
+
+                    <form onSubmit={handleSubmit} className="space-y-5">
+                        {/* Name */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Full Name
+                            </label>
+                            <div className="relative">
+                                <User className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" size={20} />
+                                <input
+                                    type="text"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                    required
+                                    placeholder="John Doe"
+                                    className="glass-input w-full pl-12 pr-4 py-3"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Email */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Email Address
+                            </label>
+                            <div className="relative">
+                                <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" size={20} />
+                                <input
+                                    type="email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    required
+                                    placeholder="you@stu.adamasuniversity.ac.in"
+                                    className="glass-input w-full pl-12 pr-4 py-3"
+                                />
+                            </div>
+                            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                ⚠️ Must use university email (@stu.adamasuniversity.ac.in)
+                            </p>
+                        </div>
+
+                        {/* Password */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Password
+                            </label>
+                            <div className="relative">
+                                <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" size={20} />
+                                <input
+                                    type={showPassword ? 'text' : 'password'}
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                    placeholder="••••••••"
+                                    className="glass-input w-full pl-12 pr-12 py-3"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                                >
+                                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Confirm Password */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Confirm Password
+                            </label>
+                            <div className="relative">
+                                <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" size={20} />
+                                <input
+                                    type={showConfirmPassword ? 'text' : 'password'}
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    required
+                                    placeholder="••••••••"
+                                    className="glass-input w-full pl-12 pr-12 py-3"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                                >
+                                    {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Error Message */}
+                        {error && (
+                            <div className="p-4 bg-gradient-danger text-white rounded-xl text-sm animate-scale-in">
+                                {error}
+                            </div>
+                        )}
+
+                        {/* Submit Button */}
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="btn-gradient w-full py-3 text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            {loading ? 'Creating account...' : 'Sign Up'}
+                        </button>
+                    </form>
+
+                    {/* Login Link */}
+                    <div className="mt-6 text-center">
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                            Already have an account?{' '}
+                            <Link to="/login" className="text-primary-600 dark:text-primary-400 font-semibold hover:underline">
+                                Login
+                            </Link>
+                        </p>
                     </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">University Email</label>
-                        <input
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="glass-input w-full bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white border-gray-200 dark:border-gray-700"
-                            placeholder="@stu.adamasuniversity.ac.in"
-                            required
-                        />
-                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Must be a valid university email.</p>
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password</label>
-                        <input
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="glass-input w-full bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white border-gray-200 dark:border-gray-700"
-                            placeholder="••••••••"
-                            required
-                        />
-                    </div>
-                    <button type="submit" className="glass-btn w-full mt-2">
-                        Sign Up
-                    </button>
-                </form>
-                <p className="text-center mt-4 text-sm text-gray-600 dark:text-gray-400">
-                    Already have an account?{' '}
-                    <Link to="/login" className="text-primary-600 hover:underline font-medium">
-                        Login
-                    </Link>
-                </p>
-            </GlassCard>
+                </GlassCard>
+            </div>
         </div>
     );
 };

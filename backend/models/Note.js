@@ -38,6 +38,33 @@ const noteSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     }],
+    // Rating & Reviews
+    averageRating: {
+        type: Number,
+        default: 0,
+        min: 0,
+        max: 5
+    },
+    totalReviews: {
+        type: Number,
+        default: 0
+    },
+    // Preview System
+    previewPages: [{
+        type: Number
+    }],
+    previewFile: {
+        type: String // URL to preview PDF
+    },
+    // Trending & Analytics
+    views: {
+        type: Number,
+        default: 0
+    },
+    downloads: {
+        type: Number,
+        default: 0
+    },
     status: {
         type: String,
         enum: ['draft', 'published', 'removed'],

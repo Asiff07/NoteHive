@@ -6,6 +6,8 @@ import NoteCard from '../components/NoteCard';
 import PaymentModal from '../components/PaymentModal';
 import { Search, Filter, X, FileText } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import usePaymentSuccess from '../hooks/usePaymentSuccess';
+import TrendingSection from '../components/TrendingSection';
 
 const Home = () => {
     // Helper to format a date string to DD/MM/YYYY
@@ -30,6 +32,9 @@ const Home = () => {
     const [showPaymentModal, setShowPaymentModal] = useState(false);
     const { user } = useAuth();
     const navigate = useNavigate();
+
+    // Handle payment success redirects
+    usePaymentSuccess();
 
     // Debounce search input
     useEffect(() => {
@@ -95,31 +100,34 @@ const Home = () => {
         (dateTo ? 1 : 0);
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-[#0c0c0c] transition-colors duration-200">
+        <div className="min-h-screen transition-colors duration-500">
             <Navbar />
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {/* Hero Section */}
-                <div className="text-center mb-12">
-                    <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-                        Find the Best <span className="text-primary-600 dark:text-primary-400">University Notes</span>
+                <div className="text-center mb-16 animate-slide-up">
+                    <h1 className="text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
+                        Find the Best <span className="text-gradient">University Notes</span>
                     </h1>
-                    <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+                    <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
                         Access high-quality study materials from top students and professors. Buy, sell, and ace your exams.
                     </p>
                 </div>
+
+                {/* Trending Section */}
+                <TrendingSection onBuy={handleBuy} onView={handleView} />
 
                 {/* Search & Filter */}
                 <div className="mb-8 space-y-4">
                     {/* Search Bar */}
                     <div className="flex flex-col md:flex-row gap-4">
                         <div className="flex-1 relative">
-                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 z-10" size={20} />
                             <input
                                 type="text"
                                 placeholder="Search subjects, topics..."
                                 value={search}
                                 onChange={e => setSearch(e.target.value)}
-                                className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-[#2a2a2a] bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/50 shadow-sm transition-colors"
+                                className="glass-input w-full pl-12 pr-4 py-4 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                             />
                         </div>
                         {/* Date Filters */}
@@ -128,14 +136,14 @@ const Home = () => {
                                 type="date"
                                 value={dateFrom}
                                 onChange={e => setDateFrom(e.target.value)}
-                                className="py-2 px-3 rounded-lg border border-gray-200 dark:border-[#2a2a2a] bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/50"
+                                className="glass-input py-3 px-4"
                             />
-                            <span className="text-gray-500 dark:text-gray-400">to</span>
+                            <span className="text-gray-500 dark:text-gray-400 font-medium">to</span>
                             <input
                                 type="date"
                                 value={dateTo}
                                 onChange={e => setDateTo(e.target.value)}
-                                className="py-2 px-3 rounded-lg border border-gray-200 dark:border-[#2a2a2a] bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/50"
+                                className="glass-input py-3 px-4"
                             />
                         </div>
                     </div>
@@ -150,7 +158,7 @@ const Home = () => {
                         <select
                             value={priceFilter}
                             onChange={e => setPriceFilter(e.target.value)}
-                            className="py-2 px-4 rounded-lg border border-gray-200 dark:border-[#2a2a2a] bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/50 shadow-sm transition-colors text-sm"
+                            className="glass-input py-3 px-4 text-sm font-medium cursor-pointer"
                         >
                             <option value="all">All Prices</option>
                             <option value="free">Free</option>
@@ -160,7 +168,7 @@ const Home = () => {
                         <select
                             value={typeFilter}
                             onChange={e => setTypeFilter(e.target.value)}
-                            className="py-2 px-4 rounded-lg border border-gray-200 dark:border-[#2a2a2a] bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/50 shadow-sm transition-colors text-sm"
+                            className="glass-input py-3 px-4 text-sm font-medium cursor-pointer"
                         >
                             <option value="all">All Types</option>
                             <option value="official">📚 Official</option>
@@ -170,10 +178,10 @@ const Home = () => {
                         {activeFiltersCount > 0 && (
                             <button
                                 onClick={clearFilters}
-                                className="flex items-center gap-2 py-2 px-4 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors text-sm font-medium"
+                                className="flex items-center gap-2 py-3 px-5 rounded-xl bg-gradient-danger text-white hover:shadow-xl hover:scale-105 active:scale-95 transition-all text-sm font-semibold"
                             >
                                 <X size={16} />
-                                Clear Filters ({activeFiltersCount})
+                                Clear ({activeFiltersCount})
                             </button>
                         )}
                         {/* Results Count */}

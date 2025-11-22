@@ -128,21 +128,21 @@ const PaymentModal = ({ note, onClose, onSuccess }) => {
                     <button
                         onClick={() => setSelectedMethod('razorpay')}
                         className={`w-full p-4 rounded-xl border-2 transition-all flex items-center gap-3 ${selectedMethod === 'razorpay'
-                                ? 'border-primary-600 bg-primary-50 dark:bg-primary-900/20'
-                                : 'border-gray-200 dark:border-gray-700 hover:border-primary-300 dark:hover:border-primary-700'
+                            ? 'border-primary-600 bg-black dark:!bg-primary-900/30 dark:border-primary-500'
+                            : 'border-gray-200 dark:border-gray-700 hover:border-primary-300 dark:hover:border-primary-700'
                             }`}
                     >
                         <div className="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
                             <Wallet className="text-blue-600 dark:text-blue-400" size={20} />
                         </div>
                         <div className="flex-1 text-left">
-                            <p className="font-semibold text-gray-900 dark:text-white">Razorpay</p>
+                            <p className={`font-semibold ${selectedMethod === 'razorpay' ? 'text-gray-900 dark:text-gray-100' : 'text-gray-900 dark:text-white'}`}>Razorpay</p>
                             <p className="text-xs text-gray-500 dark:text-gray-400">
                                 UPI, Cards, Wallets & More
                             </p>
                         </div>
                         {selectedMethod === 'razorpay' && (
-                            <div className="w-5 h-5 rounded-full bg-primary-600 flex items-center justify-center">
+                            <div className="w-5 h-5 rounded-full bg-green-600 flex items-center justify-center">
                                 <div className="w-2 h-2 rounded-full bg-white"></div>
                             </div>
                         )}
@@ -152,21 +152,21 @@ const PaymentModal = ({ note, onClose, onSuccess }) => {
                     <button
                         onClick={() => setSelectedMethod('stripe')}
                         className={`w-full p-4 rounded-xl border-2 transition-all flex items-center gap-3 ${selectedMethod === 'stripe'
-                                ? 'border-primary-600 bg-primary-50 dark:bg-primary-900/20'
-                                : 'border-gray-200 dark:border-gray-700 hover:border-primary-300 dark:hover:border-primary-700'
+                            ? 'border-primary-600 bg-black dark:!bg-primary-900/30 dark:border-primary-500'
+                            : 'border-gray-200 dark:border-gray-700 hover:border-primary-300 dark:hover:border-primary-700'
                             }`}
                     >
                         <div className="w-10 h-10 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
                             <CreditCard className="text-purple-600 dark:text-purple-400" size={20} />
                         </div>
                         <div className="flex-1 text-left">
-                            <p className="font-semibold text-gray-900 dark:text-white">Stripe</p>
+                            <p className={`font-semibold ${selectedMethod === 'stripe' ? 'text-gray-900 dark:text-gray-100' : 'text-gray-900 dark:text-white'}`}>Stripe</p>
                             <p className="text-xs text-gray-500 dark:text-gray-400">
                                 International Cards
                             </p>
                         </div>
                         {selectedMethod === 'stripe' && (
-                            <div className="w-5 h-5 rounded-full bg-primary-600 flex items-center justify-center">
+                            <div className="w-5 h-5 rounded-full bg-green-600 flex items-center justify-center">
                                 <div className="w-2 h-2 rounded-full bg-white"></div>
                             </div>
                         )}

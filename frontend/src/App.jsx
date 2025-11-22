@@ -7,6 +7,8 @@ import Home from './pages/Home';
 import UploadNote from './pages/UploadNote';
 import NoteDetail from './pages/NoteDetail';
 import AdminDashboard from './pages/AdminDashboard';
+import WishlistPage from './pages/WishlistPage';
+import SellerDashboard from './pages/SellerDashboard';
 import ChatAssistant from './components/ChatAssistant';
 
 const PrivateRoute = ({ children, adminOnly = false }) => {
@@ -33,6 +35,16 @@ function App() {
                     <Route path="/notes/:id" element={
                         <PrivateRoute>
                             <NoteDetail />
+                        </PrivateRoute>
+                    } />
+                    <Route path="/wishlist" element={
+                        <PrivateRoute>
+                            <WishlistPage />
+                        </PrivateRoute>
+                    } />
+                    <Route path="/dashboard" element={
+                        <PrivateRoute>
+                            <SellerDashboard />
                         </PrivateRoute>
                     } />
                     <Route path="/admin" element={

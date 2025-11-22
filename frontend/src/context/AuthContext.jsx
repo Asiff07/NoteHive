@@ -37,6 +37,7 @@ export const AuthProvider = ({ children }) => {
 
     const signup = async (name, email, password) => {
         const res = await axios.post('/auth/register', { name, email, password });
+        setUser(res.data);
         return res.data;
     };
 

@@ -2,11 +2,16 @@ import React from 'react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
-const GlassCard = ({ children, className, ...props }) => {
+const GlassCard = ({ children, className, premium = false, hover = true, ...props }) => {
+    const baseClasses = premium ? 'glass-premium' : 'glass-card';
+    const hoverClasses = hover ? 'hover-lift' : '';
+
     return (
         <div
             className={twMerge(
-                "bg-white/60 dark:bg-[#1a1a1a]/80 backdrop-blur-lg border border-white/40 dark:border-[#2a2a2a] shadow-xl rounded-2xl p-6 transition-colors duration-200",
+                baseClasses,
+                hoverClasses,
+                'p-6 animate-scale-in',
                 className
             )}
             {...props}
