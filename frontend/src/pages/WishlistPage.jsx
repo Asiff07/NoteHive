@@ -4,15 +4,21 @@ import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import NoteCard from '../components/NoteCard';
 import { Heart, Trash2 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 const WishlistPage = () => {
     const [wishlist, setWishlist] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+    const { user } = useAuth();
 
     useEffect(() => {
-        fetchWishlist();
-    }, []);
+        if (user) {
+            fetchWishlist();
+        } else {
+            setLoading(false);
+        }
+    }, [user]);
 
     const fetchWishlist = async () => {
         try {
@@ -43,6 +49,22 @@ const WishlistPage = () => {
         navigate(`/notes/${note._id}`);
     };
 
+    if (!user) {
+        return (
+            <div className="min-h-screen bg-gray-50 dark:bg-[#0c0c0c] flex items-center justify-center">
+                <div className="text-center">
+                    <h2 className="text-2xl font-bold mb-4">Please log in to view your wishlist</h2>
+                    <button
+                        onClick={() => navigate('/login')}
+                        className="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium"
+                    >
+                        Go to Login
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-[#0c0c0c] transition-colors duration-200">
             <Navbar />
@@ -50,9 +72,7 @@ const WishlistPage = () => {
                 <div className="mb-8">
                     <div className="flex items-center gap-3 mb-2">
                         <Heart className="text-red-500" size={32} />
-                        <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
-                            My Wishlist
-                        </h1>
+                        <h1 className="text-4xl font-bold text-gray-900 dark:text-white">My Wishlist</h1>
                     </div>
                     <p className="text-gray-600 dark:text-gray-400">
                         {wishlist.length} {wishlist.length === 1 ? 'note' : 'notes'} saved for later
@@ -82,12 +102,8 @@ const WishlistPage = () => {
                 ) : (
                     <div className="text-center py-20 bg-white dark:bg-[#1a1a1a] rounded-2xl">
                         <Heart className="mx-auto text-gray-300 dark:text-gray-600 mb-4" size={64} />
-                        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                            Your wishlist is empty
-                        </h3>
-                        <p className="text-gray-500 dark:text-gray-400 mb-6">
-                            Start adding notes you're interested in!
-                        </p>
+                        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Your wishlist is empty</h3>
+                        <p className="text-gray-500 dark:text-gray-400 mb-6">Start adding notes you're interested in!</p>
                         <button
                             onClick={() => navigate('/')}
                             className="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium"

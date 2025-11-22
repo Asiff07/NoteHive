@@ -153,3 +153,18 @@ exports.deleteNote = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
+
+exports.incrementDownloadCount = async (req, res) => {
+    try {
+        const note = await Note.findByIdAndUpdate(
+            req.params.id,
+            { $inc: { downloads: 1 } },
+            { new: true }
+        );
+        if (!note) return res.status(404).json({ message: 'Note not found' });
+        res.json({ downloads: note.downloads });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};

@@ -38,7 +38,7 @@ const Login = () => {
             <div className="w-full max-w-md">
                 {/* Logo/Title */}
                 <div className="text-center mb-8 animate-slide-up">
-                    <h1 className="text-5xl font-bold text-gradient mb-2">NotesHive</h1>
+                    <h1 className="text-5xl font-bold text-gradient mb-2">NoteNexus</h1>
                     <p className="text-gray-600 dark:text-gray-400">Welcome back! Please login to your account.</p>
                 </div>
 

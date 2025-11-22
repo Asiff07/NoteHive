@@ -163,6 +163,7 @@ const NoteDetails = () => {
                                                         href={file.url}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
+                                                        onClick={() => axios.post(`/notes/${note._id}/download`)}
                                                         className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
                                                     >
                                                         <FileText size={20} className="text-red-500" />

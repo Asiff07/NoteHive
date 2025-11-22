@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { createNote, getNotes, getNoteById, deleteNote } = require('../controllers/note.controller');
+const { createNote, getNotes, getNoteById, deleteNote, incrementDownloadCount } = require('../controllers/note.controller');
 const { getTrendingNotes, incrementViews, getNotePreview } = require('../controllers/trending.controller');
 const { protect, adminOnly } = require('../middleware/auth.middleware');
 const multer = require('multer');
@@ -21,6 +21,8 @@ router.get('/trending', getTrendingNotes);
 router.route('/:id')
     .get(protect, getNoteById)
     .delete(protect, deleteNote);
+
+router.post('/:id/download', incrementDownloadCount);
 
 // View tracking and preview
 router.post('/:id/view', incrementViews);

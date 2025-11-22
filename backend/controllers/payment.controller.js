@@ -283,7 +283,8 @@ const handleSuccessfulPayment = async ({ noteId, buyerId, sellerId, amount, prov
 
         // 2. Unlock Note for Buyer
         await Note.findByIdAndUpdate(noteId, {
-            $addToSet: { purchasedBy: buyerId }
+            $addToSet: { purchasedBy: buyerId },
+            $inc: { downloads: 1 }
         });
 
         // 3. (Optional) Update Seller Balance or Trigger Payout

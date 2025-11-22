@@ -34,7 +34,7 @@ const Navbar = () => {
                     <div className="flex items-center">
                         <Link to="/" className="flex-shrink-0 flex items-center group">
                             <span className="text-2xl font-bold text-gradient hover:scale-105 transition-transform">
-                                NotesHive
+                                NoteNexus
                             </span>
                         </Link>
                     </div>
@@ -97,7 +97,7 @@ const Navbar = () => {
                                 <Link to="/login" className="text-gray-700 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-400 px-4 py-2 rounded-xl text-sm font-medium transition-all hover:bg-white/50 dark:hover:bg-white/5">
                                     Login
                                 </Link>
-                                <Link to="/signup" className="btn-gradient text-sm">
+                                <Link to="/signup" className="text-gray-700 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-400 px-4 py-2 rounded-xl text-sm font-medium transition-all hover:bg-white/50 dark:hover:bg-white/5">
                                     Sign Up
                                 </Link>
                             </>
